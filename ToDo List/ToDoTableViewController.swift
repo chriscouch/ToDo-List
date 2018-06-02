@@ -8,9 +8,11 @@
 
 import UIKit
 
-var toDos : [ToDo] = []
+
 
 class ToDoTableViewController: UITableViewController {
+    
+    var toDos : [ToDo] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +30,7 @@ class ToDoTableViewController: UITableViewController {
 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
+       
         return toDos.count
     }
 
@@ -41,15 +43,28 @@ class ToDoTableViewController: UITableViewController {
 
         return cell
     }
-
-
-
-/*
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let toDo = toDos[indexPath.row]
+        performSegue(withIdentifier: "moveToComplete", sender: toDo)
+        
     }
-*/
+
+
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let addVC = segue.destination as? AddToDoViewController{
+        addVC.previousVC = self
+        }
+        if let completeVC = segue.destination as? CompleteToDoViewController{
+           completeVC.previousVC = self
+            if let toDo = sender as? ToDo {
+            completeVC.selectedToDo = toDo
+            }
+        }
+        
+        
+    }
+
 
 }
